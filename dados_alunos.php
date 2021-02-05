@@ -35,5 +35,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") //verifica de veio do formulario
 	print "Bairro " . $bairro . ", cidade de " . $cidade . ". Complemento: " . $complemento;
 	
 	$matricula = $matricula++
+
+	$mysqli = new mysqli($mysql_host, $mysql_username, $mysql_password, $mysql_database);
+	
+	if ($mysqli->connect_error) {
+		die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
+	}	
+	
+	$statement = $mysqli->prepare("INSERT INTO users_data (nome, sexo, data_nasc, cidade, bairro, rua, numero, complemento, matricula) VALUES(s, s, s, s, s, s, s, s, s, s)");
+	$statement->bind_param('sss', $nome, $sexo, $data_nasc, $cidade, $bairro, $rua, $numero, $complemento, $matricula); 
+	
+	if($statement->execute()){
+		print "Olá " . $nome . "!, seu cadastro foi concluído!";
+	}else{
+		print $mysqli->error; //show mysql error if any
+	}
 }
 ?>
