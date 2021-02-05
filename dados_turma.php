@@ -20,8 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") //verifica de veio do formulario
 	if (empty($professor)){
 		die("Erro: Professor responsável não informado.");
 	}	
-	
-	//print output text
+
 	print "Obrigada por se cadastrar!";
 	print "Verifique as informações listadas abaixo:";
 	print "Número da Turma: " . $turma;
@@ -30,5 +29,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") //verifica de veio do formulario
 	print "Professor Responsável: " . $professor;
 	
 	$turma = $turma++
+	    
+	$mysqli = new mysqli($mysql_host, $mysql_username, $mysql_password, $mysql_database);
+	
+	if ($mysqli->connect_error) {
+		die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
+	}	
+	
+	$statement = $mysqli->prepare("INSERT INTO users_data (turma, descricao, vagas, professor) VALUES(s, s, s, s)");
+	$statement->bind_param('sss', $turma, $descricao, $vagas, $professor); 
+	
+	if($statement->execute()){
+		print "A turma " . $turma . "!, foi cadastrada com sucesso!";
+	}else{
+		print $mysqli->error; //show mysql error if any
+	}
 }
 ?>
